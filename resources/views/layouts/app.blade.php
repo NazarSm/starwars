@@ -45,9 +45,11 @@
             </div>
         </nav>
 
-        <main class="py-4">
+            <div class="container">
+
+            @include('includes.messages')
             @yield('content')
-        </main>
+            </div>
     </div>
 </body>
 </html>

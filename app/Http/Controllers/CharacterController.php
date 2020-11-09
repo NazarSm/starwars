@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CharacterRequest;
 use App\Models\Character;
 use App\Models\Film;
 use App\Models\Homeworld;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class CharacterController extends Controller
 {
@@ -42,9 +42,9 @@ class CharacterController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CharacterRequest $characterRequest)
     {
-        (new Character())->create($request->input());
+        (new Character())->create($characterRequest->input());
 
         return redirect()->route('character.index')->with('success', 'Data saved');
     }
@@ -81,9 +81,9 @@ class CharacterController extends Controller
      * @param  \App\Models\Character  $character
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Character $character)
+    public function update(CharacterRequest $characterRequest, Character $character)
     {
-        Character::find($character->id)->fill($request->input())->save();
+        Character::find($character->id)->fill($characterRequest->input())->save();
 
         return redirect()->route('character.index')->with('success', 'Data update');
     }
