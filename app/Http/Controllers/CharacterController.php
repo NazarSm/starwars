@@ -2,19 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Api\StarwarsApi;
 use App\Models\Character;
+use App\Models\Film;
+use App\Models\Homeworld;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CharacterController extends Controller
 {
-    public $starwarsData;
-
-    public function __construct(StarwarsApi $starwarsApi)
-    {
-        $this->starwarsData = $starwarsApi;
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -22,7 +17,9 @@ class CharacterController extends Controller
      */
     public function index()
     {
+        $characters = Character::orderby('updated_at', 'DESC')->with(['homeworld:id,name'])->with(['film:id,movieTitle'])->paginate(4);
 
+        return view('characters', compact('characters'));
 
     }
 
@@ -33,7 +30,10 @@ class CharacterController extends Controller
      */
     public function create()
     {
-        //
+        $homeworlds = Homeworld::all();
+        $films = Film::all();
+
+        return view('editCharacter', compact('homeworlds', 'films'));
     }
 
     /**
@@ -44,7 +44,9 @@ class CharacterController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        (new Character())->create($request->input());
+
+        return redirect()->route('character.index')->with('success', 'Data saved');
     }
 
     /**
@@ -66,7 +68,10 @@ class CharacterController extends Controller
      */
     public function edit(Character $character)
     {
-        //
+        $homeworlds = Homeworld::all();
+        $films = Film::all();
+
+        return view('editCharacter', compact('homeworlds', 'films', 'character'));
     }
 
     /**
@@ -78,7 +83,9 @@ class CharacterController extends Controller
      */
     public function update(Request $request, Character $character)
     {
-        //
+        Character::find($character->id)->fill($request->input())->save();
+
+        return redirect()->route('character.index')->with('success', 'Data update');
     }
 
     /**
@@ -89,6 +96,9 @@ class CharacterController extends Controller
      */
     public function destroy(Character $character)
     {
-        //
+        Character::find($character->id)->forceDelete();
+
+        return redirect()->route('character.index')->with('success', 'Data delete');
+
     }
 }

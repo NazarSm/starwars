@@ -9,8 +9,21 @@ class Character extends Model
 {
     use HasFactory;
 
-    public function films()
+    protected $fillable = [
+        'name',
+        'gender',
+        'height',
+        'homeworld_id',
+        'film_id'
+    ];
+
+    public function homeworld()
     {
-        return $this->belongsToMany(Film::class);
+        return $this->belongsTo(Homeworld::class);
+    }
+
+    public function film()
+    {
+        return $this->belongsTo(Film::class);
     }
 }
