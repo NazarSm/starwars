@@ -14,17 +14,14 @@ class CreateCharactersTable extends Migration
     public function up()
     {
         Schema::create('characters', function (Blueprint $table) {
-            $table->id();
 
+            $table->bigIncrements('id');
             $table->bigInteger('homeworld_id')->unsigned();
-            $table->bigInteger('film_id')->unsigned();
-
             $table->text('name');
             $table->bigInteger('height');
             $table->enum('gender', ['male', 'female', 'n/a']);
-
             $table->foreign('homeworld_id')->references('id')->on('homeworlds');
-            $table->foreign('film_id')->references('id')->on('films');
+
 
             $table->timestamps();
         });

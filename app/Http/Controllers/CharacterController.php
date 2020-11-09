@@ -2,11 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Api\StarwarsApi;
 use App\Models\Character;
 use Illuminate\Http\Request;
 
 class CharacterController extends Controller
 {
+    public $starwarsData;
+
+    public function __construct(StarwarsApi $starwarsApi)
+    {
+        $this->starwarsData = $starwarsApi;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +22,8 @@ class CharacterController extends Controller
      */
     public function index()
     {
-        //
+
+
     }
 
     /**

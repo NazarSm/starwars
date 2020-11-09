@@ -13,6 +13,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $this->call(FilmSeeder::class);
+        $this->call(HomeworldSeeder::class);
         // \App\Models\User::factory(10)->create();
     }
 }
