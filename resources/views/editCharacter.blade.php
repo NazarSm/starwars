@@ -21,12 +21,13 @@
                                         <input type="text"
                                                name="name"
                                                id="name"
-                                               value="{{ (isset($character)) ? $character->name : ''}}">
+                                               value="{{ (isset($character)) ? $character->name : ''}}" required>
                                     </div>
 
                                     <div>
                                         <label for="gender">Select gender:</label>
-                                        <select name="gender">
+                                        <select name="gender" required>
+                                            <option></option>
                                             <option value="male">male</option>
                                             <option value="female">female</option>
                                             <option value="n/a">n/a</option>
@@ -42,31 +43,33 @@
                                         <input type="number"
                                                name="height"
                                                id="height"
-                                               value="{{ (isset($character)) ? $character->height : ''}}">
+                                               value="{{ (isset($character)) ? $character->height : ''}}" required>
                                     </div>
 
                                     <div>
                                         <label for="homeworld_id">Select homeworld:</label>
-                                        <select name="homeworld_id">
-                                            <option>Select homeworld...</option>
+                                        <select name="homeworld_id" required>
+                                            <option></option>
                                             @foreach ($homeworlds as $homeworld)
                                                 <option value="{{ $homeworld->id}}"
-                                                        @if(isset($character))
-                                                        {{'selected="selected"'}}
-                                                    @endif
-                                                >{{ $homeworld->name}}</option>
+                                                @if(isset($character))
+                                                    {{ ($homeworld->id == $character->homeworld_id) ?
+                                                     'selected="selected"' : ''}}
+                                                @endif> {{ $homeworld->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
 
                                     <div>
                                         <label for="film_id">Select films:</label>
-                                        <select name="film_id">
+                                        <select name="film_id" required>
+                                            <option></option>
                                             @foreach ($films as $film)
                                                 <option value="{{ $film->id}}"
-                                                        @if(isset($character))
-                                                        selected="selected"
-                                                    @endif> {{ $film->movieTitle}}</option>
+                                                @if(isset($character))
+                                                    {{ ($film->id == $character->film_id) ?
+                                                     'selected="selected"' : ''}}
+                                                    @endif> {{ $film->movieTitle }}</option>
                                             @endforeach
                                         </select>
                                     </div>

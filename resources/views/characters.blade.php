@@ -35,13 +35,18 @@
                         </tbody>
                         <tfoot></tfoot>
                     </table>
-                    @if($characters->total() > $characters->count())
-                        <div class="row justify-content-center">
-                            {{ $characters->links() }}
-                        </div>
-                    @endif
+
+
                 </div>
+
             </div>
+            @if($characters->total() > $characters->count())
+                <div class="row justify-content-center">
+                    {{ $characters->links() }}
+                </div>
+            @endif
         </div>
     </div>
 @endsection
+
+

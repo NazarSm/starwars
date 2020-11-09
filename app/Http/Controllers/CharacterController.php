@@ -4,12 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CharacterRequest;
 use App\Models\Character;
-use App\Models\Film;
-use App\Models\Homeworld;
-use Illuminate\Http\Request;
+use App\Repositories\CharactersRepository;
+use App\Repositories\FilmsRepository;
+use App\Repositories\HomeworldsRepository;
 
 class CharacterController extends Controller
 {
+    protected $characterRepository;
+    protected $filmsRepository;
+    protected $homeworldRepository;
+
+    public function __construct()
+    {
+        $this->characterRepository = app( CharactersRepository::class);
+        $this->filmsRepository = app( FilmsRepository::class);
+        $this->homeworldRepository = app( HomeworldsRepository::class);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -17,7 +28,7 @@ class CharacterController extends Controller
      */
     public function index()
     {
-        $characters = Character::orderby('updated_at', 'DESC')->with(['homeworld:id,name'])->with(['film:id,movieTitle'])->paginate(4);
+        $characters = $this->characterRepository->getAllWithPaginate(10);
 
         return view('characters', compact('characters'));
 
@@ -30,8 +41,8 @@ class CharacterController extends Controller
      */
     public function create()
     {
-        $homeworlds = Homeworld::all();
-        $films = Film::all();
+        $homeworlds = $this->homeworldRepository->getAll();
+        $films = $this->filmsRepository->getAll();
 
         return view('editCharacter', compact('homeworlds', 'films'));
     }
@@ -44,7 +55,7 @@ class CharacterController extends Controller
      */
     public function store(CharacterRequest $characterRequest)
     {
-        (new Character())->create($characterRequest->input());
+        $this->characterRepository->createNew()->create($characterRequest->input());
 
         return redirect()->route('character.index')->with('success', 'Data saved');
     }
@@ -68,8 +79,8 @@ class CharacterController extends Controller
      */
     public function edit(Character $character)
     {
-        $homeworlds = Homeworld::all();
-        $films = Film::all();
+        $homeworlds = $this->homeworldRepository->getAll();
+        $films = $this->filmsRepository->getAll();
 
         return view('editCharacter', compact('homeworlds', 'films', 'character'));
     }
@@ -83,7 +94,7 @@ class CharacterController extends Controller
      */
     public function update(CharacterRequest $characterRequest, Character $character)
     {
-        Character::find($character->id)->fill($characterRequest->input())->save();
+        $this->characterRepository->getEdit($character->id)->fill($characterRequest->input())->save();
 
         return redirect()->route('character.index')->with('success', 'Data update');
     }
@@ -96,7 +107,7 @@ class CharacterController extends Controller
      */
     public function destroy(Character $character)
     {
-        Character::find($character->id)->forceDelete();
+        $this->characterRepository->getEdit($character->id)->forceDelete();
 
         return redirect()->route('character.index')->with('success', 'Data delete');
 
