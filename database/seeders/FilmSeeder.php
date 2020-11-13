@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Api\StarwarsApi;
+use App\Models\Film;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -22,8 +23,11 @@ class FilmSeeder extends Seeder
      */
     public function run()
     {
-      $films = $this->starwarsData->getFilms();
-      DB::table('films')->insert($films);
+        $films = $this->starwarsData->getFilms();
 
+        foreach ($films as $film){
+            Film::firstOrCreate($film);
+        }
     }
+
 }

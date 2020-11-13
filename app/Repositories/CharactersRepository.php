@@ -13,15 +13,15 @@ class CharactersRepository extends CoreRepository
         return Model::class;
     }
 
-    public function getAllWithPaginate($perPage)
+    public function getAllWithPaginate(string $perPage)
     {
-        return $this->startConditions()->orderBy('id','DESC')->
-        with(['homeworld:id,name'])->
-        with(['film:id,movieTitle'])->
-        paginate($perPage);
+        return $this->startConditions()->orderBy('updated_at','DESC')
+            ->with(['homeworld:id,name'])
+            ->with('films')
+            ->paginate($perPage);
     }
 
-    public function getEdit($id)
+    public function getEdit(string $id)
     {
         return $this->startConditions()->find($id);
     }

@@ -10,11 +10,10 @@ class Character extends Model
     use HasFactory;
 
     protected $fillable = [
+        'homeworld_id',
         'name',
         'gender',
         'height',
-        'homeworld_id',
-        'film_id'
     ];
 
     public function homeworld()
@@ -22,8 +21,8 @@ class Character extends Model
         return $this->belongsTo(Homeworld::class);
     }
 
-    public function film()
+    public function films()
     {
-        return $this->belongsTo(Film::class);
+        return $this->belongsToMany(Film::class);
     }
 }
