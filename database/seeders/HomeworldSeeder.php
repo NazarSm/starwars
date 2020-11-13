@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Api\StarwarsApi;
+use App\Models\Homeworld;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -21,8 +22,10 @@ class HomeworldSeeder extends Seeder
      */
     public function run()
     {
-        $homeworlds = $this->starwarsData->getHomeworld();
-        DB::table('homeworlds')->insert($homeworlds);
+        $homeworlds = $this->starwarsData->getHomeworlds();
 
+        foreach ($homeworlds as $homeworld){
+            Homeworld::firstOrCreate($homeworld);
+        }
     }
 }

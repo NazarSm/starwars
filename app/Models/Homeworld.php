@@ -13,4 +13,5 @@ class Homeworld extends Model
     {
         return $this->hasMany(Character::class);
     }
+
 }

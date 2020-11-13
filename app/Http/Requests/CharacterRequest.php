@@ -24,11 +24,10 @@ class CharacterRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|alpha_dash|min:1',
+            'homeworld_id' => 'required|exists:characters,homeworld_id',
+            'name' => 'required',
             'height' => 'required|numeric|between:10,300',
-            'gender' => 'required',
-            'homeworld_id' => 'required',
-            'film_id' => 'required',
+            'gender' => 'required|in:male,female,n/a',
         ];
     }
 }

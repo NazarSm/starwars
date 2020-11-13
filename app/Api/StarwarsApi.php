@@ -8,34 +8,73 @@ use Illuminate\Support\Facades\Http;
 
 class StarwarsApi
 {
-    public $url = 'https://swapi.dev/api/';
+    const URL = 'https://swapi.dev/api';
 
     public function getFilms()
     {
-        $films = Http::get($this->url . 'films/');
-        $films = $films->json();
+        $path = 'films/';
+        $films = $this->getAllPage($path);
 
-        foreach ($films['results'] as $item){
-            $filmsTitle[] = ['movieTitle' => $item['title']];
+        foreach ($films as $film) {
+            $filmsTitle[] = [
+                'movieTitle' => $film['title']
+            ];
         }
 
         return $filmsTitle;
     }
 
-    public function getHomeworld()
+    public function getHomeworlds()
     {
-        $homeworlds = Http::get($this->url . 'planets/');
-        $homeworlds = $homeworlds->json();
+        $path = 'planets/';
+        $homeworlds = $this->getAllPage($path);
 
-        foreach ($homeworlds['results'] as $item){
-            $homeworldsName[] = ['name' => $item['name']];
+        foreach ($homeworlds as $homeworld) {
+            $homeworldsName[] = [
+                'name' => $homeworld['name']
+            ];
         }
-        return $homeworldsName;
 
+        return $homeworldsName;
     }
-    public function getInfoCharacter()
+
+    public function getCharacters()
     {
-        $characters = Http::get($this->url . 'people/');
-        return $characters->json();
+        $path = 'people/';
+        $characters = $this->getAllPage($path);
+
+        foreach ($characters as $character) {
+            $films = $character['films'];
+            $filmsId = [];
+
+            foreach ($films as $film){
+                $filmsId[] = filter_var($film, FILTER_SANITIZE_NUMBER_INT);
+            }
+
+            $infoCharacters[] = [
+                'homeworld_id' => filter_var($character['homeworld'], FILTER_SANITIZE_NUMBER_INT),
+                'film_id' => $filmsId,
+                'name' => $character['name'],
+                'height' => $character['height'],
+                'gender' => $character['gender'],
+            ];
+        }
+
+        return $infoCharacters;
     }
+
+    public function getAllPage($path)
+    {
+        $url = sprintf('%s/%s', self::URL, $path);
+        $page = Http::get($url);
+        $allData = $page['results'];
+
+        while ($page['next'] != null){
+            $page =  Http::get($page['next']);
+            $allData = array_merge($allData, $page['results']);
+        }
+
+        return $allData;
+    }
+
 }

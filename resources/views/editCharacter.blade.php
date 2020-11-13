@@ -5,11 +5,11 @@
             <div class="card">
                 <div class="card-body">
 
-                    <h5><b>{{ isset($character) ? 'Edit' : 'New' }}</b></h5>
+                    <h5><b>{{ isset($editCharacter) ? 'Edit' : 'New' }}</b></h5>
                     <hr>
 
-                    @if(isset($character))
-                        <form method="POST" action="{{ route('character.update', $character->id) }}">
+                    @if(isset($editCharacter))
+                        <form method="POST" action="{{ route('character.update', $editCharacter->id) }}">
                             @method('PATCH')
                             @else
                                 <form method="POST" action="{{ route('character.store') }}">
@@ -21,55 +21,49 @@
                                         <input type="text"
                                                name="name"
                                                id="name"
-                                               value="{{ (isset($character)) ? $character->name : ''}}" required>
-                                    </div>
+                                               value="{{ (isset($editCharacter)) ? $editCharacter->name : ''}}" required>
 
-                                    <div>
                                         <label for="gender">Select gender:</label>
                                         <select name="gender" required>
                                             <option></option>
                                             <option value="male">male</option>
                                             <option value="female">female</option>
                                             <option value="n/a">n/a</option>
-                                            @if(isset($character))
-                                                <option value="{{ $character->gender }}" selected="selected"
-                                                >{{ $character->gender  }}</option>
+                                            @if(isset($editCharacter))
+                                                <option value="{{ $editCharacter->gender }}" selected="selected"
+                                                >{{ $editCharacter->gender  }}</option>
                                             @endif
                                         </select>
-                                    </div>
 
-                                    <div>
                                         <label for="height">Height</label>
                                         <input type="number"
                                                name="height"
                                                id="height"
-                                               value="{{ (isset($character)) ? $character->height : ''}}" required>
+                                               value="{{ (isset($editCharacter)) ? $editCharacter->height : ''}}" required>
                                     </div>
-
                                     <div>
                                         <label for="homeworld_id">Select homeworld:</label>
                                         <select name="homeworld_id" required>
                                             <option></option>
                                             @foreach ($homeworlds as $homeworld)
-                                                <option value="{{ $homeworld->id}}"
-                                                @if(isset($character))
-                                                    {{ ($homeworld->id == $character->homeworld_id) ?
+                                                <option value="{{ $homeworld['id']}}"
+                                                @if(isset($editCharacter))
+                                                    {{ ($homeworld->id == $editCharacter->homeworld->id) ?
                                                      'selected="selected"' : ''}}
-                                                @endif> {{ $homeworld->name }}</option>
+                                                @endif> {{ $homeworld['name'] }}</option>
                                             @endforeach
                                         </select>
-                                    </div>
 
-                                    <div>
                                         <label for="film_id">Select films:</label>
-                                        <select name="film_id" required>
-                                            <option></option>
+                                        <select multiple name="film_id[]" required>
                                             @foreach ($films as $film)
-                                                <option value="{{ $film->id}}"
-                                                @if(isset($character))
-                                                    {{ ($film->id == $character->film_id) ?
+                                                <option value="{{ $film['id']}}"
+                                                @if(isset($editCharacter))
+                                                    @foreach($editCharacter->films as $editFilm)
+                                                    {{ ($film->id == $editFilm->id) ?
                                                      'selected="selected"' : ''}}
-                                                    @endif> {{ $film->movieTitle }}</option>
+                                                    @endforeach
+                                                    @endif> {{ $film['movieTitle'] }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -77,15 +71,15 @@
                                     <div class="submit">
                                         <input class="btn btn-secondary"
                                                type="submit"
-                                               value="{{ isset($character) ? 'Update' : 'Save' }}">
+                                               value="{{ isset($editCharacter) ? 'Update' : 'Save' }}">
                                     </div>
 
-                                    @if(isset($character))
-                                        <input type="hidden" name="id" value="{{ $character->id }}">
+                                    @if(isset($editCharacter))
+                                        <input type="hidden" name="id" value="{{ $editCharacter->id }}">
 
                                 </form>
 
-                                <form method="POST" action="{{ route('character.destroy',  $character->id ) }}">
+                                <form method="POST" action="{{ route('character.destroy',  $editCharacter->id ) }}">
                                     @method('DELETE')
                                     @csrf
                                     <button type="submit" class="btn btn-link">Delete</button>

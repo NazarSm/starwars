@@ -11,7 +11,7 @@
                         <thead class="thead-light">
                         <tr>
                             <th>Name</th>
-                            <th>Height </th>
+                            <th>Height</th>
                             <th>Gender</th>
                             <th>Homeworld</th>
                             <th>Film</th>
@@ -26,7 +26,11 @@
                                 <td>{{ $character->height }}</td>
                                 <td>{{ $character->gender }}</td>
                                 <td>{{ $character->homeworld->name }}</td>
-                                <td>{{ $character->film->movieTitle}}</td>
+                                <td>
+                                    @foreach($character->films as $film)
+                                        {{ $film->movieTitle }} <br>
+                                @endforeach
+                                </td>
                                 <td>
                                     <a href="{{ route('character.edit', $character->id ) }} " id="edit"> Edit</a>
                                 </td>

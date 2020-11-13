@@ -11,6 +11,6 @@ class Film extends Model
 
     public function characters()
     {
-        return $this->hasMany(Character::class);
+        return $this->belongsToMany(Character::class);
     }
 }
