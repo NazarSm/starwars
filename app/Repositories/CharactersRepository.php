@@ -15,7 +15,7 @@ class CharactersRepository extends CoreRepository
 
     public function getAllWithPaginate(string $perPage)
     {
-        return $this->startConditions()->orderBy('updated_at')
+        return $this->startConditions()->orderBy('updated_at', 'DESC')
             ->with(['homeworld:id,name'])
             ->with('films')
             ->paginate($perPage);
