@@ -24,7 +24,7 @@ class CharacterRequest extends FormRequest
     public function rules()
     {
         return [
-            'homeworld_id' => 'required|exists:characters,homeworld_id',
+            'homeworld_id' => 'required|exists:homeworlds,id',
             'name' => 'required',
             'height' => 'required|numeric|between:10,300',
             'gender' => 'required|in:male,female,n/a',
