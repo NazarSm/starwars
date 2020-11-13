@@ -56,7 +56,8 @@ class CharacterController extends Controller
     public function store(CharacterRequest $characterRequest)
     {
         $newCharacter = $this->characterRepository->createNew()->create($characterRequest->input());
-        $newCharacter->films()->attach($characterRequest['film_id']);
+        $filmsId = $characterRequest['film_id'];
+        $newCharacter->films()->attach($filmsId);
 
         return redirect()->route('character.index')->with('success', 'Data saved');
     }
@@ -96,10 +97,10 @@ class CharacterController extends Controller
      */
     public function update(CharacterRequest $characterRequest, Character $character)
     {
-
         $this->characterRepository->getEdit($character->id)->fill($characterRequest->input())->save();
         $this->characterRepository->getEdit($character->id)->films()->detach();
-        $this->characterRepository->getEdit($character->id)->films()->attach($characterRequest['film_id']);
+        $filmsId = $characterRequest['film_id'];
+        $this->characterRepository->getEdit($character->id)->films()->attach($filmsId);
 
         return redirect()->route('character.index')->with('success', 'Data update');
     }
@@ -112,7 +113,6 @@ class CharacterController extends Controller
      */
     public function destroy(Character $character)
     {
-        $this->characterRepository->getEdit($character->id)->films()->detach();
         $this->characterRepository->getEdit($character->id)->forceDelete();
 
         return redirect()->route('character.index')->with('success', 'Data delete');
